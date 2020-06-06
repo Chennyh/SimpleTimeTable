@@ -1,5 +1,6 @@
 package com.chennyh.simpletimetable.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.dao.MySQLiteOpenHelper;
 import com.chennyh.simpletimetable.dao.UserDAO;
 import com.chennyh.simpletimetable.entity.User;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -25,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText registerInputReEnterPassword;
     private AppCompatButton registerBtnSignup;
     private TextView registerLinkLogin;
+    private CircleImageView registerBtnClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerInputReEnterPassword = findViewById(R.id.register_input_reEnterPassword);
         registerBtnSignup = findViewById(R.id.register_btn_signup);
         registerLinkLogin = findViewById(R.id.register_link_login);
+        registerBtnClose = findViewById(R.id.register_btn_close);
 
         registerBtnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,6 +57,14 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ActivityUtils.finishActivity(RegisterActivity.this, R.anim.push_right_in, R.anim.push_right_out);
+            }
+        });
+
+        registerBtnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CANCELED);
+                finish();
             }
         });
     }
@@ -83,7 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (userDAO.emailExists(user.getEmail())) {
             registerInputEmail.setError("邮箱已存在");
             return;
-        }else {
+        } else {
             registerInputEmail.setError(null);
         }
 

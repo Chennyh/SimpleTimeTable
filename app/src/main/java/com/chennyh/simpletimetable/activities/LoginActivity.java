@@ -11,20 +11,24 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.dao.MySQLiteOpenHelper;
 import com.chennyh.simpletimetable.dao.UserDAO;
 import com.chennyh.simpletimetable.entity.User;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
+    public static final String isLogin = "isLogin";
     private static final int REQUEST_REGISTER = 0;
     private EditText loginInputEmail;
     private EditText loginInputPassword;
     private AppCompatButton loginBtnLogin;
     private TextView loginLinkSignup;
+    private CircleImageView loginBtnClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,11 @@ public class LoginActivity extends AppCompatActivity {
         loginInputPassword = findViewById(R.id.login_input_password);
         loginBtnLogin = findViewById(R.id.login_btn_login);
         loginLinkSignup = findViewById(R.id.login_link_signup);
+        loginBtnClose = findViewById(R.id.login_btn_close);
+
+        if (SPStaticUtils.contains(MySQLiteOpenHelper.USER_TABLE_EMAIL)) {
+            loginInputEmail.setText(SPStaticUtils.getString(MySQLiteOpenHelper.USER_TABLE_EMAIL));
+        }
 
         loginBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +60,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ActivityUtils.startActivityForResult(LoginActivity.this, RegisterActivity.class, REQUEST_REGISTER, R.anim.push_left_in, R.anim.push_left_out);
+            }
+        });
+
+        loginBtnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginBtnLogin.setEnabled(true);
+                finish();
             }
         });
     }
@@ -72,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
         UserDAO userDAO = new UserDAO(getApplicationContext());
         if (userDAO.loginUser(user)) {
-            onLoginSuccess();
+            onLoginSuccess(user.getEmail());
         } else {
             onLoginFailed();
         }
@@ -88,6 +105,9 @@ public class LoginActivity extends AppCompatActivity {
                 loginInputPassword.setFocusable(true);
                 loginInputPassword.setFocusableInTouchMode(true);
             }
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
         }
     }
 
@@ -97,11 +117,12 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onLoginSuccess() {
+    public void onLoginSuccess(String email) {
         loginBtnLogin.setEnabled(true);
         ToastUtils.showLong("登录成功");
-
-
+        SPStaticUtils.put(MySQLiteOpenHelper.USER_TABLE_EMAIL, email);
+        SPStaticUtils.put(isLogin, true);
+        setResult(RESULT_OK);
         finish();
     }
 

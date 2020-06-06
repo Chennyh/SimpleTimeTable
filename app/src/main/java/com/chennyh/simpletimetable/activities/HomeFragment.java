@@ -20,14 +20,6 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static HomeFragment newInstance(String name) {
-        Bundle args = new Bundle();
-        args.putString("name", name);
-        HomeFragment fragment = new HomeFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -51,4 +51,18 @@ public class UserDAO {
         }
         return false;
     }
+
+    public User getUserInfo(String email) {
+        db = mySQLiteOpenHelper.getReadableDatabase();
+        Cursor cursor = db.query(MySQLiteOpenHelper.USER_TABLE_NAME, null, MySQLiteOpenHelper.USER_TABLE_EMAIL + "=?", new String[]{email}, null, null, null);
+        if (cursor.getCount()>=1) {
+            cursor.moveToFirst();
+            User user = new User();
+            user.setId(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.USER_TABLE_ID)));
+            user.setUsername(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.USER_TABLE_USERNAME)));
+            user.setEmail(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.USER_TABLE_EMAIL)));
+            return user;
+        }
+        return null;
+    }
 }
