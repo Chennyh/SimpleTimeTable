@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="账户设置">
+        <Preference
+            android:key="changePassword"
+            android:title="修改密码" />
+        <Preference
+            android:title="修改头像"
+            android:enabled="false" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="偏好设置">
+        <Preference
+            android:key="classTime"
+            android:title="上课时间" />
+        <Preference
+            android:key="weekSetting"
+            android:title="周数设置" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="其他设置">
+        <Preference
+            android:title="其他"
+            android:enabled="false" />
+    </PreferenceCategory>
+</PreferenceScreen>

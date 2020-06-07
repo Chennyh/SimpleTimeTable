@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.UserFragment">
+    tools:context=".fragment.UserFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:id="@+id/layout_add"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
+                android:background="@drawable/ripple_second_button"
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="16dp"
@@ -69,6 +69,19 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_chevron_right_black_24dp" />
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="16dp"
+                android:background="#50919191" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="16dp"
+                android:background="#50919191"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/layout_course_mg"

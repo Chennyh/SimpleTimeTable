@@ -1,4 +1,4 @@
-package com.chennyh.simpletimetable.entity;
+package com.chennyh.simpletimetable.bean;
 
 import lombok.Data;
 

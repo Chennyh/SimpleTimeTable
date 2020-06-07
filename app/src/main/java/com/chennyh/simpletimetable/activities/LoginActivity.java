@@ -14,9 +14,9 @@ import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.dao.MySQLiteOpenHelper;
-import com.chennyh.simpletimetable.dao.UserDAO;
-import com.chennyh.simpletimetable.entity.User;
+import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
+import com.chennyh.simpletimetable.db.UserDAO;
+import com.chennyh.simpletimetable.bean.User;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginActivity extends AppCompatActivity {
@@ -45,8 +45,8 @@ public class LoginActivity extends AppCompatActivity {
         loginLinkSignup = findViewById(R.id.login_link_signup);
         loginBtnClose = findViewById(R.id.login_btn_close);
 
-        if (SPStaticUtils.contains(MySQLiteOpenHelper.USER_TABLE_EMAIL)) {
-            loginInputEmail.setText(SPStaticUtils.getString(MySQLiteOpenHelper.USER_TABLE_EMAIL));
+        if (SPStaticUtils.contains(MySQLiteOpenHelper.USER_COLUMN_EMAIL)) {
+            loginInputEmail.setText(SPStaticUtils.getString(MySQLiteOpenHelper.USER_COLUMN_EMAIL));
         }
 
         loginBtnLogin.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
 
         UserDAO userDAO = new UserDAO(getApplicationContext());
         if (userDAO.loginUser(user)) {
-            onLoginSuccess(user.getEmail());
+            onLoginSuccess(user.getEmail(), userDAO);
         } else {
             onLoginFailed();
         }
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_REGISTER) {
             if (resultCode == RESULT_OK) {
-                loginInputEmail.setText(data.getStringExtra(MySQLiteOpenHelper.USER_TABLE_EMAIL));
+                loginInputEmail.setText(data.getStringExtra(MySQLiteOpenHelper.USER_COLUMN_EMAIL));
                 loginInputEmail.setFocusable(false);
                 loginInputEmail.setFocusableInTouchMode(false);
                 loginInputPassword.setFocusable(true);
@@ -117,10 +117,11 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onLoginSuccess(String email) {
+    public void onLoginSuccess(String email, UserDAO userDAO) {
         loginBtnLogin.setEnabled(true);
         ToastUtils.showLong("登录成功");
-        SPStaticUtils.put(MySQLiteOpenHelper.USER_TABLE_EMAIL, email);
+        SPStaticUtils.put(MySQLiteOpenHelper.USER_COLUMN_ID, userDAO.queyID(email));
+        SPStaticUtils.put(MySQLiteOpenHelper.USER_COLUMN_EMAIL, email);
         SPStaticUtils.put(isLogin, true);
         setResult(RESULT_OK);
         finish();

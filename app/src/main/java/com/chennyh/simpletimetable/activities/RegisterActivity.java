@@ -1,6 +1,5 @@
 package com.chennyh.simpletimetable.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +12,9 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.dao.MySQLiteOpenHelper;
-import com.chennyh.simpletimetable.dao.UserDAO;
-import com.chennyh.simpletimetable.entity.User;
+import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
+import com.chennyh.simpletimetable.db.UserDAO;
+import com.chennyh.simpletimetable.bean.User;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -56,6 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         registerLinkLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setResult(RESULT_FIRST_USER);
                 ActivityUtils.finishActivity(RegisterActivity.this, R.anim.push_right_in, R.anim.push_right_out);
             }
         });
@@ -71,6 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        setResult(RESULT_FIRST_USER);
         ActivityUtils.finishActivity(RegisterActivity.this, R.anim.push_right_in, R.anim.push_right_out);
     }
 
@@ -109,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void onRegisterSuccess(String email) {
         ToastUtils.showLong("注册成功！");
         registerBtnSignup.setEnabled(true);
-        setResult(RESULT_OK, new Intent().putExtra(MySQLiteOpenHelper.USER_TABLE_EMAIL, email));
+        setResult(RESULT_OK, new Intent().putExtra(MySQLiteOpenHelper.USER_COLUMN_EMAIL, email));
         ActivityUtils.finishActivity(RegisterActivity.this, R.anim.push_right_in, R.anim.push_right_out);
     }
 

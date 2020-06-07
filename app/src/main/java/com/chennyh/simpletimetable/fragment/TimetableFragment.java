@@ -1,4 +1,4 @@
-package com.chennyh.simpletimetable.activities;
+package com.chennyh.simpletimetable.fragment;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
