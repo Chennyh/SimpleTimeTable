@@ -43,15 +43,15 @@ public class MySQLiteOpenHelper extends SQLiteOpenHelper {
         db.execSQL("create table " + COURSE_TABLE_NAME
                 + "(" + COURSE_COLUMN_ID + " integer primary key autoincrement, "
                 + COURSE_COLUMN_UID + " integer not null, "
-                + COURSE_COLUMN_NAME + " text not null, "
-                + COURSE_COLUMN_ROOM + " text not null, "
-                + COURSE_COLUMN_TEACHER + " text not null, "
-                + COURSE_COLUMN_WEEKLIST + " text not null, "
-                + COURSE_COLUMN_START + " integer not null, "
-                + COURSE_COLUMN_STEP + " integer not null, "
-                + COURSE_COLUMN_DAY + " integer not null, "
-                + COURSE_COLUMN_COLOR + " integer not null, "
-                + COURSE_COLUMN_TIME + " text not null, "
+                + COURSE_COLUMN_NAME + " text, "
+                + COURSE_COLUMN_ROOM + " text, "
+                + COURSE_COLUMN_TEACHER + " text, "
+                + COURSE_COLUMN_WEEKLIST + " text, "
+                + COURSE_COLUMN_START + " integer, "
+                + COURSE_COLUMN_STEP + " integer, "
+                + COURSE_COLUMN_DAY + " integer, "
+                + COURSE_COLUMN_COLOR + " integer, "
+                + COURSE_COLUMN_TIME + " text, "
                 + "foreign key(" + COURSE_COLUMN_ID + ") references " + USER_TABLE_NAME + "(" + USER_COLUMN_ID + "))");
     }
 

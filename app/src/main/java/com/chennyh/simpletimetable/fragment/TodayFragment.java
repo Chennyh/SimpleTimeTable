@@ -9,9 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.SPStaticUtils;
 import com.chennyh.simpletimetable.R;
+import com.chennyh.simpletimetable.activities.LoginActivity;
 import com.chennyh.simpletimetable.bean.Course;
 import com.chennyh.simpletimetable.db.CourseDAO;
+import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
 import com.chennyh.simpletimetable.utils.ToadayAdapter;
 
 import java.util.ArrayList;
@@ -44,17 +47,16 @@ public class TodayFragment extends Fragment {
     }
 
     private void setupAdapter(View view) {
-//        CourseDAO courseDAO = new CourseDAO(getContext());
+        if (SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
+            CourseDAO courseDAO = new CourseDAO(getContext());
+            ArrayList<Course> courses = courseDAO.getCourses(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
 
-        ArrayList<Course> courses = new ArrayList<>();
-        courses.add(new Course("Linux", "08:00", "5-305", "肖宝", ColorUtils.getRandomColor()));
-        courses.add(new Course("Linux", "08:00", "5-305", "肖宝", ColorUtils.getRandomColor()));
-        courses.add(new Course("Linux", "08:00", "5-305", "肖宝", ColorUtils.getRandomColor()));
-        courses.add(new Course("Linux", "08:00", "5-305", "肖宝", ColorUtils.getRandomColor()));
-        courses.add(new Course("Linux", "08:00", "5-305", "肖宝", ColorUtils.getRandomColor()));
+            if (courses != null) {
+                listView = view.findViewById(R.id.listView);
+                adapter = new ToadayAdapter(getActivity(), listView, R.layout.list_item, courses);
+                listView.setAdapter(adapter);
+            }
+        }
 
-        listView = view.findViewById(R.id.listView);
-        adapter = new ToadayAdapter(getActivity(), listView, R.layout.list_item, courses);
-        listView.setAdapter(adapter);
     }
 }

@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.bean.Course;
+import com.chennyh.simpletimetable.db.CourseDAO;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -45,8 +46,7 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
     @SuppressLint("SetTextI18n")
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
         String name = Objects.requireNonNull(getItem(position)).getName();
         String time = Objects.requireNonNull(getItem(position)).getTime();
@@ -54,7 +54,7 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
         String teacher = Objects.requireNonNull(getItem(position)).getTeacher();
         int color = getItem(position).getColor();
 
-        Course course = new Course(name, time, room, teacher, color);
+        course = new Course(name, time, room, teacher, color);
         final ViewHolder holder;
 
         if (convertView == null) {
@@ -81,7 +81,7 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
             @Override
             public void onClick(View v) {
                 final PopupMenu popupMenu = new PopupMenu(mActivity, holder.classBtnPopup);
-                //TODO: read database
+                final CourseDAO courseDAO = new CourseDAO(mActivity);
 
                 popupMenu.getMenuInflater().inflate(R.menu.class_btn_edit, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -89,12 +89,17 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_delete:
-                                //TODO: impl
-                                ToastUtils.showLong("delete");
+                                if (courseDAO.deleteCourse(getItem(position))) {
+                                    ToastUtils.showLong("删除成功");
+                                } else {
+                                    ToastUtils.showLong("删除失败");
+                                }
+                                courses.remove(position);
+                                notifyDataSetChanged();
                                 return true;
                             case R.id.menu_edit:
                                 //TODO: impl
-                                ToastUtils.showLong("edit");
+                                ToastUtils.showLong("未实现");
                                 return true;
                             default:
                                 return onMenuItemClick(item);

@@ -16,10 +16,7 @@ import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.activities.AboutActivity;
-import com.chennyh.simpletimetable.activities.FeedbackActivity;
-import com.chennyh.simpletimetable.activities.LoginActivity;
-import com.chennyh.simpletimetable.activities.SettingActivity;
+import com.chennyh.simpletimetable.activities.*;
 import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
 import com.chennyh.simpletimetable.db.UserDAO;
 import com.chennyh.simpletimetable.bean.User;
@@ -143,6 +140,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 } else {
                     logOut();
                 }
+                break;
+            case R.id.layout_add:
+                ActivityUtils.startActivity(AddCourseActivity.class);
                 break;
             case R.id.layout_course_mg:
                 ToastUtils.showLong("未开发");
