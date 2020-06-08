@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.activities.LoginActivity;
@@ -49,7 +48,7 @@ public class TodayFragment extends Fragment {
     private void setupAdapter(View view) {
         if (SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
             CourseDAO courseDAO = new CourseDAO(getContext());
-            ArrayList<Course> courses = courseDAO.getCourses(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
+            ArrayList<Course> courses = courseDAO.getTodayCourses(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
 
             if (courses != null) {
                 listView = view.findViewById(R.id.listView);

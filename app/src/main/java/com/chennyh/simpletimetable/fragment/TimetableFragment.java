@@ -43,12 +43,12 @@ public class TimetableFragment extends Fragment {
             CourseDAO courseDAO = new CourseDAO(getContext());
             List<Schedule> schedules = courseDAO.getCoursesSchedule(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
 
-
             if (schedules != null) {
                 TimetableView timetableView = view.findViewById(R.id.timetable);
                 timetableView
                         .data(schedules)
                         .curWeek(1)
+                        .isShowWeekends(false)
                         .showView();
             }
         }

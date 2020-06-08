@@ -7,4 +7,22 @@
         <item>星期四</item>
         <item>星期五</item>
     </string-array>
+    <string-array name="start">
+        <item>从第 1 节开始上</item>
+        <item>从第 2 节开始上</item>
+        <item>从第 3 节开始上</item>
+        <item>从第 4 节开始上</item>
+        <item>从第 5 节开始上</item>
+        <item>从第 6 节开始上</item>
+        <item>从第 7 节开始上</item>
+        <item>从第 8 节开始上</item>
+        <item>从第 9 节开始上</item>
+        <item>从第 10 节开始上</item>
+    </string-array>
+    <string-array name="step">
+        <item>上 1 节课</item>
+        <item>上 2 节课</item>
+        <item>上 3 节课</item>
+        <item>上 4 节课</item>
+    </string-array>
 </resources>

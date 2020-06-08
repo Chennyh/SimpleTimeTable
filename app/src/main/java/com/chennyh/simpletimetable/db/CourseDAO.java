@@ -4,11 +4,17 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import com.blankj.utilcode.util.ObjectUtils;
+import com.blankj.utilcode.util.TimeUtils;
 import com.chennyh.simpletimetable.bean.Course;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.zhuangfei.timetable.model.Schedule;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CourseDAO {
@@ -75,7 +81,7 @@ public class CourseDAO {
         db = mySQLiteOpenHelper.getReadableDatabase();
         ArrayList<Course> courses = new ArrayList<>();
         Cursor cursor = db.query(MySQLiteOpenHelper.COURSE_TABLE_NAME, null, MySQLiteOpenHelper.COURSE_COLUMN_UID + "=?", new String[]{uid + ""}, null, null, null);
-        if (cursor.getCount()>=1) {
+        if (cursor.getCount() >= 1) {
             cursor.moveToFirst();
             do {
                 Course course = new Course();
@@ -93,24 +99,54 @@ public class CourseDAO {
         return null;
     }
 
+    public ArrayList<Course> getTodayCourses(int uid) {
+        db = mySQLiteOpenHelper.getReadableDatabase();
+        ArrayList<Course> courses = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(TimeUtils.getNowDate());
+        int currentWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        Cursor cursor = db.query(MySQLiteOpenHelper.COURSE_TABLE_NAME, null, MySQLiteOpenHelper.COURSE_COLUMN_UID + "=?", new String[]{uid + ""}, null, null, null);
+        if (cursor.getCount() >= 1) {
+            cursor.moveToFirst();
+            
+            do {
+                int courseDay = cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_DAY));
+                if (courseDay == currentWeek) {
+                    Course course = new Course();
+                    course.setId(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_ID)));
+                    course.setName(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_NAME)));
+                    course.setTime(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_TIME)));
+                    course.setRoom(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_ROOM)));
+                    course.setTeacher(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_TEACHER)));
+                    course.setColor(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_COLOR)));
+
+                    courses.add(course);
+                }
+            } while (cursor.moveToNext());
+            return courses;
+        }
+        return null;
+    }
+
     public List<Schedule> getCoursesSchedule(int uid) {
         db = mySQLiteOpenHelper.getReadableDatabase();
         List<Schedule> courses = new ArrayList<>();
         Cursor cursor = db.query(MySQLiteOpenHelper.COURSE_TABLE_NAME, null, MySQLiteOpenHelper.COURSE_COLUMN_UID + "=?", new String[]{uid + ""}, null, null, null);
-        if (cursor.getCount()>=1) {
+        if (cursor.getCount() >= 1) {
             cursor.moveToFirst();
             do {
                 Course course = new Course();
-
                 course.setName(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_NAME)));
                 course.setRoom(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_ROOM)));
                 course.setTeacher(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_TEACHER)));
-//                course.setWeekList(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_TEACHER)));
-                ArrayList<Integer> integers = new ArrayList<>();
-                integers.add(1);
-                integers.add(16);
 
-                course.setWeekList(integers);
+                Gson gson = new Gson();
+                Type listType = new TypeToken<List<Integer>>() {
+                }.getType();
+                ArrayList<Integer> weekList = gson.fromJson(cursor.getString(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_WEEKLIST)), listType);
+                course.setWeekList(weekList);
+
                 course.setStart(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_START)));
                 course.setStep(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_STEP)));
                 course.setDay(cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_DAY)));
