@@ -145,7 +145,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 ActivityUtils.startActivity(AddCourseActivity.class);
                 break;
             case R.id.layout_course_mg:
-                ToastUtils.showLong("未开发");
+                ActivityUtils.startActivity(CourseManageActivity.class);
                 break;
             case R.id.layout_share:
                 ToastUtils.showLong("未开发");

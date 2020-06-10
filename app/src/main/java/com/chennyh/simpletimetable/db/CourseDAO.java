@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import com.blankj.utilcode.util.ObjectUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.chennyh.simpletimetable.bean.Course;
@@ -109,7 +108,7 @@ public class CourseDAO {
         Cursor cursor = db.query(MySQLiteOpenHelper.COURSE_TABLE_NAME, null, MySQLiteOpenHelper.COURSE_COLUMN_UID + "=?", new String[]{uid + ""}, null, null, null);
         if (cursor.getCount() >= 1) {
             cursor.moveToFirst();
-            
+
             do {
                 int courseDay = cursor.getInt(cursor.getColumnIndex(MySQLiteOpenHelper.COURSE_COLUMN_DAY));
                 if (courseDay == currentWeek) {

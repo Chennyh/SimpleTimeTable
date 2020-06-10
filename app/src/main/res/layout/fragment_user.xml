@@ -16,7 +16,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,7 +95,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="管理课表"
+                    android:text="管理课程"
                     android:textSize="16sp" />
 
                 <ImageView
@@ -104,6 +103,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_chevron_right_black_24dp" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"

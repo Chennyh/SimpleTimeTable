@@ -15,9 +15,7 @@ import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
 import com.zhuangfei.timetable.TimetableView;
 import com.zhuangfei.timetable.model.Schedule;
 
-
 import java.util.List;
-
 
 /**
  * A simple {@link Fragment} subclass.

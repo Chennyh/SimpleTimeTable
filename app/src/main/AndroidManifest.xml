@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
+            android:name=".activities.CourseManageActivity"
+            android:label="管理课表" />
+        <activity
             android:name=".activities.AddCourseActivity"
             android:label="添加课程" />
         <activity

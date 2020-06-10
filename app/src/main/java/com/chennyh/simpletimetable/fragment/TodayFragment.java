@@ -18,7 +18,6 @@ import com.chennyh.simpletimetable.utils.ToadayAdapter;
 
 import java.util.ArrayList;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */

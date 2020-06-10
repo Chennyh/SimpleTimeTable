@@ -2,7 +2,6 @@ package com.chennyh.simpletimetable.activities;
 
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.util.Patterns;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
