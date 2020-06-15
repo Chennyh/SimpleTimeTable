@@ -19,8 +19,6 @@ import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.activities.*;
 import com.chennyh.simpletimetable.constants.CommonConstants;
 import com.chennyh.simpletimetable.constants.DatabaseConstants;
-import com.chennyh.simpletimetable.db.UserDAO;
-import com.chennyh.simpletimetable.bean.User;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
@@ -102,11 +100,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     }
 
     public void setLoginInfo() {
-        UserDAO userDAO = new UserDAO(getContext());
-        User user = userDAO.getUserInfo(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_EMAIL));
-        if (user != null) {
+        if (SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_USERNAME) != null) {
             userHeadImage.setImageResource(R.drawable.headerpic);
-            userTvUsername.setText(user.getUsername());
+            userTvUsername.setText(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_USERNAME));
             layoutAdd.setVisibility(View.VISIBLE);
         }
 

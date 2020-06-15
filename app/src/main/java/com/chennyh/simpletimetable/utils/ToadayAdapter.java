@@ -10,10 +10,17 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.bean.Course;
-import com.chennyh.simpletimetable.db.CourseDAO;
+import com.chennyh.simpletimetable.constants.CommonConstants;
+import com.chennyh.simpletimetable.http.ApiClient;
+import com.chennyh.simpletimetable.http.TimeTableService;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -81,7 +88,7 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
             @Override
             public void onClick(View v) {
                 final PopupMenu popupMenu = new PopupMenu(mActivity, holder.classBtnPopup);
-                final CourseDAO courseDAO = new CourseDAO(mActivity);
+                TimeTableService timeTableService = ApiClient.getClient().create(TimeTableService.class);
 
                 popupMenu.getMenuInflater().inflate(R.menu.class_btn_edit, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -89,11 +96,24 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.menu_delete:
-                                if (courseDAO.deleteCourse(getItem(position))) {
-                                    ToastUtils.showLong("删除成功");
-                                } else {
-                                    ToastUtils.showLong("删除失败");
-                                }
+                                Call<ResponseBody> call = timeTableService.deleteCourse(SPStaticUtils.getString(CommonConstants.AUTHORIZATION), getItem(position).getId());
+                                call.enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                        if (response.code() == CommonConstants.REQUEST_OK) {
+                                            ToastUtils.showLong("删除成功");
+                                        } else {
+                                            ToastUtils.showLong("删除失败");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                        ToastUtils.showLong("服务器连接失败！");
+                                        t.printStackTrace();
+                                    }
+                                });
+
                                 courses.remove(position);
                                 notifyDataSetChanged();
                                 return true;

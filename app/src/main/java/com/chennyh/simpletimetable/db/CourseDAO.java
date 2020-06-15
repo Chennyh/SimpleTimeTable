@@ -85,7 +85,7 @@ public class CourseDAO {
             cursor.moveToFirst();
             do {
                 Course course = new Course();
-                course.setId(cursor.getInt(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_ID)));
+                course.setId(cursor.getLong(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_ID)));
                 course.setName(cursor.getString(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_NAME)));
                 course.setTime(cursor.getString(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_TIME)));
                 course.setRoom(cursor.getString(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_ROOM)));
@@ -114,7 +114,7 @@ public class CourseDAO {
                 int courseDay = cursor.getInt(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_DAY));
                 if (courseDay == currentWeek) {
                     Course course = new Course();
-                    course.setId(cursor.getInt(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_ID)));
+                    course.setId(cursor.getLong(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_ID)));
                     course.setName(cursor.getString(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_NAME)));
                     course.setTime(cursor.getString(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_TIME)));
                     course.setRoom(cursor.getString(cursor.getColumnIndex(DatabaseConstants.COURSE_COLUMN_ROOM)));

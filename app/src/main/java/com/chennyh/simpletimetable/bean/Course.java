@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 public class Course implements ScheduleEnable {
 
-    private int id;
+    private Long id;
 
-    private int uid;
+    private Long uid;
 
     /**
      * 课程名

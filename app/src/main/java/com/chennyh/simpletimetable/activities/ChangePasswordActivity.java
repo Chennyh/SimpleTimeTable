@@ -11,9 +11,16 @@ import androidx.appcompat.widget.Toolbar;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
+import com.chennyh.simpletimetable.constants.CommonConstants;
 import com.chennyh.simpletimetable.constants.DatabaseConstants;
-import com.chennyh.simpletimetable.db.UserDAO;
-import com.chennyh.simpletimetable.bean.User;
+import com.chennyh.simpletimetable.http.ApiClient;
+import com.chennyh.simpletimetable.http.TimeTableService;
+import com.chennyh.simpletimetable.http.request.LoginUserRequests;
+import com.chennyh.simpletimetable.http.request.UserUpdateRequest;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChangePasswordActivity extends AppCompatActivity {
 
@@ -21,7 +28,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private EditText changePasswordInputNewPassword;
     private EditText changePasswordInputRePassword;
     private AppCompatButton changePasswordBtnChange;
-    private UserDAO userDAO;
+    private TimeTableService timeTableService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +39,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        userDAO = new UserDAO(getApplicationContext());
+        timeTableService = ApiClient.getClient().create(TimeTableService.class);
         init();
     }
 
@@ -49,14 +56,25 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     return;
                 }
                 String password = changePasswordInputNewPassword.getText().toString();
-                User user = new User();
-                user.setEmail(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_EMAIL));
-                user.setPassword(password);
-                if (userDAO.changePassword(user)) {
-                    ToastUtils.showLong("修改成功！");
-                    return;
-                }
-                ToastUtils.showLong("修改失败！");
+                UserUpdateRequest userUpdateRequest = new UserUpdateRequest(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_USERNAME), password, SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_EMAIL), true);
+
+                Call<ResponseBody> call = timeTableService.updateUser(SPStaticUtils.getString(CommonConstants.AUTHORIZATION), userUpdateRequest);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.code() == CommonConstants.REQUEST_OK) {
+                            ToastUtils.showLong("修改成功！");
+                            return;
+                        }
+                        ToastUtils.showLong("修改失败！");
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        ToastUtils.showLong("服务器连接失败！");
+                        t.printStackTrace();
+                    }
+                });
             }
         });
     }
@@ -79,15 +97,25 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String newPassword = changePasswordInputNewPassword.getText().toString();
         String rePassword = changePasswordInputRePassword.getText().toString();
 
-        User user = new User();
-        user.setEmail(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_EMAIL));
-        user.setPassword(oldPassword);
-        if (!userDAO.matchPassword(user)) {
-            changePasswordInputOldPassword.setError("原密码不正确！");
-            valid = false;
-        } else {
-            changePasswordInputOldPassword.setError(null);
-        }
+        LoginUserRequests loginUserRequests = new LoginUserRequests(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_USERNAME), oldPassword, true);
+        Call<ResponseBody> call = timeTableService.loginUser(loginUserRequests);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == CommonConstants.REQUEST_OK) {
+                    changePasswordInputNewPassword.setError(null);
+                } else {
+                    changePasswordInputOldPassword.setError("原密码不正确！");
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                ToastUtils.showLong("服务器连接失败！");
+                t.printStackTrace();
+            }
+        });
 
         if (newPassword.isEmpty() || newPassword.length() < 4 || newPassword.length() > 10) {
             changePasswordInputNewPassword.setError("密码在 4 到 10 之间");

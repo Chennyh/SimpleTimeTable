@@ -59,7 +59,7 @@ public class UserDAO {
         if (cursor.getCount()>=1) {
             cursor.moveToFirst();
             User user = new User();
-            user.setId(cursor.getInt(cursor.getColumnIndex(DatabaseConstants.USER_COLUMN_ID)));
+            user.setId(cursor.getLong(cursor.getColumnIndex(DatabaseConstants.USER_COLUMN_ID)));
             user.setUsername(cursor.getString(cursor.getColumnIndex(DatabaseConstants.USER_COLUMN_USERNAME)));
             user.setEmail(cursor.getString(cursor.getColumnIndex(DatabaseConstants.USER_COLUMN_EMAIL)));
             return user;

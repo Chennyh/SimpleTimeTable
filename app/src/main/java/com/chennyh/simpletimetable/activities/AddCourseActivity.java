@@ -16,9 +16,15 @@ import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.bean.Course;
+import com.chennyh.simpletimetable.constants.CommonConstants;
 import com.chennyh.simpletimetable.constants.DatabaseConstants;
-import com.chennyh.simpletimetable.db.CourseDAO;
+import com.chennyh.simpletimetable.http.ApiClient;
+import com.chennyh.simpletimetable.http.TimeTableService;
+import com.chennyh.simpletimetable.http.request.AddCourseRquest;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,6 +40,7 @@ public class AddCourseActivity extends AppCompatActivity {
     private AppCompatButton addCourseBtnAdd;
     private TextView addCourseTvFromTime;
     private TextView addCourseTvToTime;
+    private TimeTableService timeTableService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +51,7 @@ public class AddCourseActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        timeTableService = ApiClient.getClient().create(TimeTableService.class);
         init();
     }
 
@@ -111,29 +118,40 @@ public class AddCourseActivity extends AppCompatActivity {
                 String room = addCourseInputRoom.getText().toString();
                 String time = addCourseTvFromTime.getText().toString() + " - " + addCourseTvFromTime.getText().toString();
 
-                Course course = new Course();
-                course.setUid(SPStaticUtils.getInt(DatabaseConstants.USER_COLUMN_ID));
-                course.setColor(ColorUtils.getRandomColor());
-                course.setName(name);
-                course.setTeacher(teacher);
-                course.setDay(day);
-                course.setStart(start);
-                course.setStep(step);
-                course.setRoom(room);
-                course.setTime(time);
+                AddCourseRquest addCourseRquest = new AddCourseRquest();
+                addCourseRquest.setUserId(SPStaticUtils.getLong(DatabaseConstants.USER_COLUMN_ID));
+                addCourseRquest.setColor(ColorUtils.getRandomColor());
+                addCourseRquest.setName(name);
+                addCourseRquest.setTeacher(teacher);
+                addCourseRquest.setDay(day);
+                addCourseRquest.setStart(start);
+                addCourseRquest.setStep(step);
+                addCourseRquest.setRoom(room);
+                addCourseRquest.setTime(time);
 
                 ArrayList<Integer> weekList = new ArrayList<>();
                 weekList.add(1);
                 weekList.add(20);
-                course.setWeekList(weekList);
+                addCourseRquest.setWeekList(weekList);
 
-                CourseDAO courseDAO = new CourseDAO(getApplicationContext());
-                if (courseDAO.addCourse(course)) {
-                    ToastUtils.showLong("添加成功！");
-                    finish();
-                } else {
-                    ToastUtils.showLong("添加失败！");
-                }
+                Call<ResponseBody> call = timeTableService.addCourse(SPStaticUtils.getString(CommonConstants.AUTHORIZATION), addCourseRquest);
+                call.enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.code() == CommonConstants.REQUEST_OK) {
+                            ToastUtils.showLong("添加成功！");
+                            finish();
+                        } else {
+                            ToastUtils.showLong("添加失败！");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        ToastUtils.showLong("服务器连接失败！");
+                        t.printStackTrace();
+                    }
+                });
             }
         });
 
@@ -145,6 +163,8 @@ public class AddCourseActivity extends AppCompatActivity {
         String name = addCourseInputName.getText().toString();
         String teacher = addCourseInputTeacher.getText().toString();
         String room = addCourseInputRoom.getText().toString();
+        String startTime = addCourseTvFromTime.getText().toString();
+        String endTime = addCourseTvToTime.getText().toString();
 
         if (name.isEmpty()) {
             addCourseInputName.setError("课程名字未填写");
@@ -165,6 +185,20 @@ public class AddCourseActivity extends AppCompatActivity {
             valid = false;
         } else {
             addCourseInputRoom.setError(null);
+        }
+
+        if ("选择上课时间".equals(startTime)) {
+            addCourseTvFromTime.setError("未选择上课时间");
+            valid = false;
+        } else {
+            addCourseTvFromTime.setError(null);
+        }
+
+        if ("选择下课时间".equals(endTime)) {
+            addCourseTvToTime.setError("未选择下课时间");
+            valid = false;
+        } else {
+            addCourseTvToTime.setError(null);
         }
 
         return valid;
