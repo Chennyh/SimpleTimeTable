@@ -56,6 +56,11 @@ public class Course implements ScheduleEnable {
      */
     private int color;
 
+    /**
+     * 学期
+     */
+    private String term;
+
     public Course() {
     }
 

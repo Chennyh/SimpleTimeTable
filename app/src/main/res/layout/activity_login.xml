@@ -45,11 +45,11 @@
                 android:layout_marginBottom="8dp">
 
                 <EditText
-                    android:id="@+id/login_input_email"
+                    android:id="@+id/login_input_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:hint="邮箱" />
+                    android:inputType="text"
+                    android:hint="用户名" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!--  Password Label -->

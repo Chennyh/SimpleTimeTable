@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.activities.LoginActivity;
 import com.chennyh.simpletimetable.bean.Course;
+import com.chennyh.simpletimetable.constants.CommonConstants;
+import com.chennyh.simpletimetable.constants.DatabaseConstants;
 import com.chennyh.simpletimetable.db.CourseDAO;
-import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
 import com.chennyh.simpletimetable.utils.ToadayAdapter;
 
 import java.util.ArrayList;
@@ -45,9 +45,9 @@ public class TodayFragment extends Fragment {
     }
 
     private void setupAdapter(View view) {
-        if (SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
+        if (SPStaticUtils.getBoolean(CommonConstants.isLogin)) {
             CourseDAO courseDAO = new CourseDAO(getContext());
-            ArrayList<Course> courses = courseDAO.getTodayCourses(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
+            ArrayList<Course> courses = courseDAO.getTodayCourses(SPStaticUtils.getInt(DatabaseConstants.USER_COLUMN_ID));
 
             if (courses != null) {
                 listView = view.findViewById(R.id.listView);

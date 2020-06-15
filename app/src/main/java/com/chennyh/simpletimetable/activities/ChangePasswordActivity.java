@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
+import com.chennyh.simpletimetable.constants.DatabaseConstants;
 import com.chennyh.simpletimetable.db.UserDAO;
 import com.chennyh.simpletimetable.bean.User;
 
@@ -50,7 +50,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
                 String password = changePasswordInputNewPassword.getText().toString();
                 User user = new User();
-                user.setEmail(SPStaticUtils.getString(MySQLiteOpenHelper.USER_COLUMN_EMAIL));
+                user.setEmail(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_EMAIL));
                 user.setPassword(password);
                 if (userDAO.changePassword(user)) {
                     ToastUtils.showLong("修改成功！");
@@ -80,7 +80,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String rePassword = changePasswordInputRePassword.getText().toString();
 
         User user = new User();
-        user.setEmail(SPStaticUtils.getString(MySQLiteOpenHelper.USER_COLUMN_EMAIL));
+        user.setEmail(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_EMAIL));
         user.setPassword(oldPassword);
         if (!userDAO.matchPassword(user)) {
             changePasswordInputOldPassword.setError("原密码不正确！");

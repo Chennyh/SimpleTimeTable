@@ -17,8 +17,8 @@ import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.bean.Course;
+import com.chennyh.simpletimetable.constants.DatabaseConstants;
 import com.chennyh.simpletimetable.db.CourseDAO;
-import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -112,7 +112,7 @@ public class AddCourseActivity extends AppCompatActivity {
                 String time = addCourseTvFromTime.getText().toString() + " - " + addCourseTvFromTime.getText().toString();
 
                 Course course = new Course();
-                course.setUid(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
+                course.setUid(SPStaticUtils.getInt(DatabaseConstants.USER_COLUMN_ID));
                 course.setColor(ColorUtils.getRandomColor());
                 course.setName(name);
                 course.setTeacher(teacher);

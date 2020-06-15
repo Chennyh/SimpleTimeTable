@@ -12,10 +12,22 @@ import androidx.appcompat.widget.AppCompatButton;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
-import com.chennyh.simpletimetable.db.UserDAO;
-import com.chennyh.simpletimetable.bean.User;
+import com.chennyh.simpletimetable.constants.CommonConstants;
+import com.chennyh.simpletimetable.constants.DatabaseConstants;
+import com.chennyh.simpletimetable.constants.ErrorCode;
+import com.chennyh.simpletimetable.http.ApiClient;
+import com.chennyh.simpletimetable.http.TimeTableService;
+import com.chennyh.simpletimetable.http.request.RegisterUserRequests;
+import com.chennyh.simpletimetable.http.response.ErrorResponse;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import de.hdodenhof.circleimageview.CircleImageView;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import java.lang.reflect.Type;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -27,12 +39,14 @@ public class RegisterActivity extends AppCompatActivity {
     private AppCompatButton registerBtnSignup;
     private TextView registerLinkLogin;
     private CircleImageView registerBtnClose;
+    private TimeTableService timeTableService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        timeTableService = ApiClient.getClient().create(TimeTableService.class);
         init();
     }
 
@@ -87,30 +101,47 @@ public class RegisterActivity extends AppCompatActivity {
         String email = registerInputEmail.getText().toString();
         String password = registerInputPassword.getText().toString();
 
-        User user = new User();
-        user.setUsername(name);
-        user.setPassword(password);
-        user.setEmail(email);
+        RegisterUserRequests registerUserRequests = new RegisterUserRequests(email, name, password);
+        Call<ResponseBody> call = timeTableService.registerUser(registerUserRequests);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == CommonConstants.REQUEST_OK) {
+                    onRegisterSuccess(registerUserRequests.getUsername());
+                    return;
+                }
+                Gson gson = new Gson();
+                Type type = new TypeToken<ErrorResponse>() {
+                }.getType();
+                ErrorResponse errorResponse = gson.fromJson(response.errorBody().charStream(), type);
+                if (errorResponse.getCode() == ErrorCode.USER_NAME_ALREADY_EXIST.getCode()) {
+                    registerInputName.setError(ErrorCode.USER_NAME_ALREADY_EXIST.getMessage());
+                    return;
+                } else {
+                    registerInputName.setError(null);
+                }
+                if (errorResponse.getCode() == ErrorCode.EMAIL_ALREADY_EXIST.getCode()) {
+                    registerInputEmail.setError(ErrorCode.EMAIL_ALREADY_EXIST.getMessage());
+                    return;
+                } else {
+                    registerInputEmail.setError(null);
+                }
+                onRegisterFailed();
+            }
 
-        UserDAO userDAO = new UserDAO(getApplicationContext());
-        if (userDAO.emailExists(user.getEmail())) {
-            registerInputEmail.setError("邮箱已存在");
-            return;
-        } else {
-            registerInputEmail.setError(null);
-        }
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                ToastUtils.showLong("服务器连接失败！");
+                t.printStackTrace();
+            }
+        });
 
-        if (userDAO.registerUser(user)) {
-            onRegisterSuccess(user.getEmail());
-        } else {
-            onRegisterFailed();
-        }
     }
 
-    public void onRegisterSuccess(String email) {
+    public void onRegisterSuccess(String username) {
         ToastUtils.showLong("注册成功！");
         registerBtnSignup.setEnabled(true);
-        setResult(RESULT_OK, new Intent().putExtra(MySQLiteOpenHelper.USER_COLUMN_EMAIL, email));
+        setResult(RESULT_OK, new Intent().putExtra(DatabaseConstants.USER_COLUMN_USERNAME, username));
         ActivityUtils.finishActivity(RegisterActivity.this, R.anim.push_right_in, R.anim.push_right_out);
     }
 

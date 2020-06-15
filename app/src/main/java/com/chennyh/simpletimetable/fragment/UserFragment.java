@@ -17,7 +17,8 @@ import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.activities.*;
-import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
+import com.chennyh.simpletimetable.constants.CommonConstants;
+import com.chennyh.simpletimetable.constants.DatabaseConstants;
 import com.chennyh.simpletimetable.db.UserDAO;
 import com.chennyh.simpletimetable.bean.User;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -60,7 +61,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setData() {
-        if (!SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
+        if (!SPStaticUtils.getBoolean(CommonConstants.isLogin)) {
             userHeadImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
             userTvUsername.setText("未登录");
             layoutAdd.setVisibility(View.GONE);
@@ -102,7 +103,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     public void setLoginInfo() {
         UserDAO userDAO = new UserDAO(getContext());
-        User user = userDAO.getUserInfo(SPStaticUtils.getString(MySQLiteOpenHelper.USER_COLUMN_EMAIL));
+        User user = userDAO.getUserInfo(SPStaticUtils.getString(DatabaseConstants.USER_COLUMN_EMAIL));
         if (user != null) {
             userHeadImage.setImageResource(R.drawable.headerpic);
             userTvUsername.setText(user.getUsername());
@@ -123,7 +124,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 .setPositiveButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        SPStaticUtils.put(LoginActivity.isLogin, false);
+                        SPStaticUtils.put(CommonConstants.isLogin, false);
                         setData();
                     }
                 })
@@ -135,7 +136,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.user_head_image:
             case R.id.user_tv_username:
-                if (!SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
+                if (!SPStaticUtils.getBoolean(CommonConstants.isLogin)) {
                     ActivityUtils.startActivityForResult(UserFragment.this, LoginActivity.class, REQUEST_REGISTER);
                 } else {
                     logOut();

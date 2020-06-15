@@ -9,8 +9,9 @@ import androidx.appcompat.widget.Toolbar;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.bean.Course;
+import com.chennyh.simpletimetable.constants.CommonConstants;
+import com.chennyh.simpletimetable.constants.DatabaseConstants;
 import com.chennyh.simpletimetable.db.CourseDAO;
-import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
 import com.chennyh.simpletimetable.utils.ToadayAdapter;
 
 import java.util.ArrayList;
@@ -46,9 +47,9 @@ public class CourseManageActivity extends AppCompatActivity {
     }
 
     private void setupAdapter() {
-        if (SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
+        if (SPStaticUtils.getBoolean(CommonConstants.isLogin)) {
             CourseDAO courseDAO = new CourseDAO(getApplicationContext());
-            ArrayList<Course> courses = courseDAO.getCourses(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
+            ArrayList<Course> courses = courseDAO.getCourses(SPStaticUtils.getInt(DatabaseConstants.USER_COLUMN_ID));
 
             if (courses != null) {
                 listView = findViewById(R.id.course_manage_listview);

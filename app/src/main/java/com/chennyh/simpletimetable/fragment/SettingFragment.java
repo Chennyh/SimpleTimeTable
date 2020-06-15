@@ -7,7 +7,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.chennyh.simpletimetable.R;
 import com.chennyh.simpletimetable.activities.ChangePasswordActivity;
-import com.chennyh.simpletimetable.activities.LoginActivity;
+import com.chennyh.simpletimetable.constants.CommonConstants;
 
 public class SettingFragment extends PreferenceFragmentCompat {
     @Override
@@ -15,7 +15,7 @@ public class SettingFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.setting, rootKey);
         Preference changePassword = findPreference("changePassword");
         changePassword.setIntent(new Intent(getContext(), ChangePasswordActivity.class));
-        if (SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
+        if (SPStaticUtils.getBoolean(CommonConstants.isLogin)) {
             changePassword.setEnabled(true);
             return;
         }

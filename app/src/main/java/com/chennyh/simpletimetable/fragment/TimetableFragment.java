@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.chennyh.simpletimetable.R;
-import com.chennyh.simpletimetable.activities.LoginActivity;
+import com.chennyh.simpletimetable.constants.CommonConstants;
+import com.chennyh.simpletimetable.constants.DatabaseConstants;
 import com.chennyh.simpletimetable.db.CourseDAO;
-import com.chennyh.simpletimetable.db.MySQLiteOpenHelper;
 import com.zhuangfei.timetable.TimetableView;
 import com.zhuangfei.timetable.model.Schedule;
 
@@ -37,9 +37,9 @@ public class TimetableFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (SPStaticUtils.getBoolean(LoginActivity.isLogin)) {
+        if (SPStaticUtils.getBoolean(CommonConstants.isLogin)) {
             CourseDAO courseDAO = new CourseDAO(getContext());
-            List<Schedule> schedules = courseDAO.getCoursesSchedule(SPStaticUtils.getInt(MySQLiteOpenHelper.USER_COLUMN_ID));
+            List<Schedule> schedules = courseDAO.getCoursesSchedule(SPStaticUtils.getInt(DatabaseConstants.USER_COLUMN_ID));
 
             if (schedules != null) {
                 TimetableView timetableView = view.findViewById(R.id.timetable);
