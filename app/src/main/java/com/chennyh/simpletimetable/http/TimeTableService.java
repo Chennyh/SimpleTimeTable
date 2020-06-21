@@ -36,6 +36,10 @@ public interface TimeTableService {
     @GET("api/courses/{userId}")
     Call<ArrayList<Course>> getCoursesById(@Header("Authorization") String authorization, @Path("userId") Long userId, @Query("today") boolean today);
 
-    @DELETE("api/courses/{coursesId}")
-    Call<ResponseBody> deleteCourse(@Header("Authorization") String authorization, @Path("coursesId") Long coursesId);
+    @DELETE("api/courses/{courseId}")
+    Call<ResponseBody> deleteCourse(@Header("Authorization") String authorization, @Path("courseId") Long coursesId);
+
+    @PUT("api/courses/{courseId}")
+    Call<ResponseBody> updateCourse(@Header("Authorization") String authorization, @Path("courseId") Long coursesId, @Body AddCourseRquest addCourseRquest);
+
 }

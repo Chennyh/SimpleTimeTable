@@ -1,5 +1,6 @@
 package com.chennyh.simpletimetable.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -7,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.preference.PreferenceManager;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
@@ -15,7 +17,6 @@ import com.chennyh.simpletimetable.constants.CommonConstants;
 import com.chennyh.simpletimetable.constants.DatabaseConstants;
 import com.chennyh.simpletimetable.http.ApiClient;
 import com.chennyh.simpletimetable.http.TimeTableService;
-import com.chennyh.simpletimetable.utils.ToadayAdapter;
 import com.zhuangfei.timetable.TimetableView;
 import com.zhuangfei.timetable.model.Schedule;
 import retrofit2.Call;
@@ -59,11 +60,13 @@ public class TimetableFragment extends Fragment {
                             schedules.add(course.getSchedule());
                         }
                         if (schedules != null) {
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
                             TimetableView timetableView = view.findViewById(R.id.timetable);
                             timetableView
                                     .data(schedules)
-                                    .curWeek(1)
-                                    .isShowWeekends(false)
+//                                    .curTerm(sharedPreferences.getString("termSetting", ""))
+//                                    .curWeek((Integer.parseInt(sharedPreferences.getString("weekSetting", "1"))))
+                                    .isShowWeekends(sharedPreferences.getBoolean("showWeekend", false))
                                     .showView();
                         }
                     }

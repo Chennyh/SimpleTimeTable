@@ -2,6 +2,7 @@ package com.chennyh.simpletimetable.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,9 +11,11 @@ import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chennyh.simpletimetable.R;
+import com.chennyh.simpletimetable.activities.UpdateCourseActivity;
 import com.chennyh.simpletimetable.bean.Course;
 import com.chennyh.simpletimetable.constants.CommonConstants;
 import com.chennyh.simpletimetable.http.ApiClient;
@@ -32,6 +35,7 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
     private ArrayList<Course> courses;
     private Course course;
     private ListView mListView;
+    private static final int REQUEST_UPDATE = 0;
 
     public ToadayAdapter(Activity activity, ListView listView, int resource, ArrayList<Course> objects) {
         super(activity, resource, objects);
@@ -118,8 +122,9 @@ public class ToadayAdapter extends ArrayAdapter<Course> {
                                 notifyDataSetChanged();
                                 return true;
                             case R.id.menu_edit:
-                                //TODO: impl
-                                ToastUtils.showLong("未实现");
+                                Intent intent = new Intent(getContext(), UpdateCourseActivity.class);
+                                intent.putExtra("course", getItem(position));
+                                ActivityUtils.startActivityForResult((Activity) getContext(), intent, REQUEST_UPDATE);
                                 return true;
                             default:
                                 return onMenuItemClick(item);

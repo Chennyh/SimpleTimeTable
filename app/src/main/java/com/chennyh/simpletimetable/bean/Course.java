@@ -1,5 +1,7 @@
 package com.chennyh.simpletimetable.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.zhuangfei.timetable.model.Schedule;
 import com.zhuangfei.timetable.model.ScheduleEnable;
 import lombok.Data;
@@ -7,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Course implements ScheduleEnable {
+public class Course implements ScheduleEnable, Parcelable {
 
     private Long id;
 
@@ -85,6 +87,40 @@ public class Course implements ScheduleEnable {
         this.time = time;
     }
 
+    protected Course(Parcel in) {
+        if (in.readByte() == 0) {
+            id = null;
+        } else {
+            id = in.readLong();
+        }
+        if (in.readByte() == 0) {
+            uid = null;
+        } else {
+            uid = in.readLong();
+        }
+        name = in.readString();
+        time = in.readString();
+        room = in.readString();
+        teacher = in.readString();
+        start = in.readInt();
+        step = in.readInt();
+        day = in.readInt();
+        color = in.readInt();
+        term = in.readString();
+    }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        @Override
+        public Course createFromParcel(Parcel in) {
+            return new Course(in);
+        }
+
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
+
     @Override
     public Schedule getSchedule() {
         Schedule schedule = new Schedule();
@@ -97,5 +133,35 @@ public class Course implements ScheduleEnable {
         schedule.setWeekList(getWeekList());
         schedule.setColorRandom(getColor());
         return schedule;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        if (id == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(id);
+        }
+        if (uid == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeLong(uid);
+        }
+        dest.writeString(name);
+        dest.writeString(time);
+        dest.writeString(room);
+        dest.writeString(teacher);
+        dest.writeInt(start);
+        dest.writeInt(step);
+        dest.writeInt(day);
+        dest.writeInt(color);
+        dest.writeString(term);
     }
 }

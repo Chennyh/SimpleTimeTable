@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chennyh.simpletimetable">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/logo"
@@ -10,8 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
+            android:name=".activities.UpdateCourseActivity"
+            android:label="修改课程" />
+        <activity
             android:name=".activities.CourseManageActivity"
-            android:label="管理课表" />
+            android:label="管理课程" />
         <activity
             android:name=".activities.AddCourseActivity"
             android:label="添加课程" />
@@ -41,6 +46,5 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

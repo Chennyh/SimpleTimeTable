@@ -50,6 +50,12 @@ public class TodayFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_today, container, false);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setupAdapter(getView());
+    }
+
     private void setupAdapter(View view) {
         if (SPStaticUtils.getBoolean(CommonConstants.isLogin)) {
 

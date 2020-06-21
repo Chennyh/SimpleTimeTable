@@ -13,10 +13,17 @@
     <PreferenceCategory android:title="偏好设置">
         <Preference
             android:key="classTime"
-            android:title="上课时间" />
-        <Preference
+            android:title="上课时间"
+            android:enabled="false"/>
+        <EditTextPreference
+            android:key="termSetting"
+            android:title="当前学期" />
+        <EditTextPreference
             android:key="weekSetting"
-            android:title="周数设置" />
+            android:title="当前周数" />
+        <SwitchPreference
+            android:key="showWeekend"
+            android:title="显示周末" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="其他设置">

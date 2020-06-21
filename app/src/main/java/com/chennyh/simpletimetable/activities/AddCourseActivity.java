@@ -1,6 +1,7 @@
 package com.chennyh.simpletimetable.activities;
 
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -117,6 +119,7 @@ public class AddCourseActivity extends AppCompatActivity {
                 int step = addCourseSelectStep.getSelectedItemPosition() + 1;
                 String room = addCourseInputRoom.getText().toString();
                 String time = addCourseTvFromTime.getText().toString() + " - " + addCourseTvFromTime.getText().toString();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
                 AddCourseRquest addCourseRquest = new AddCourseRquest();
                 addCourseRquest.setUserId(SPStaticUtils.getLong(DatabaseConstants.USER_COLUMN_ID));
@@ -128,6 +131,7 @@ public class AddCourseActivity extends AppCompatActivity {
                 addCourseRquest.setStep(step);
                 addCourseRquest.setRoom(room);
                 addCourseRquest.setTime(time);
+                addCourseRquest.setTerm(sharedPreferences.getString("termSetting", ""));
 
                 ArrayList<Integer> weekList = new ArrayList<>();
                 weekList.add(1);
